@@ -1,6 +1,7 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Convenience methods and utilities for frequent use 
@@ -106,6 +107,33 @@ public class Utils {
       } catch (IOException ioe) {
         throw new RuntimeException(ioe);
       }
+    }
+  }
+  
+  public static class Stopwatch {
+    long beginning;
+    
+    public Stopwatch() {
+      beginning = 0L;
+    }
+    
+    public Stopwatch start() {
+      beginning = System.nanoTime();
+      return this;
+    }
+    
+    public Stopwatch reset() {
+      beginning = System.nanoTime();
+      return this;
+    }
+    
+    public long elapsed() {
+      return elapsed(TimeUnit.MILLISECONDS);
+    }
+    
+    public long elapsed(TimeUnit desiredUnit) {
+      long elapsed = System.nanoTime();
+      return desiredUnit.convert(elapsed - beginning, TimeUnit.NANOSECONDS);
     }
   }
 }

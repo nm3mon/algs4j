@@ -6,6 +6,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Nabeel Ali Memon
@@ -67,5 +68,21 @@ public class UtilsTest {
         System.out.println(writer.getBuffer().toString());
       }
     }
+  }
+  
+  @Test public void timerShouldTimeCorrectly() throws InterruptedException {
+    Utils.Stopwatch timer = new Utils.Stopwatch().start();
+    Thread.sleep(2000);
+    long elapsed = timer.elapsed(TimeUnit.SECONDS);
+    Assert.assertTrue(elapsed >= 2 && elapsed <=3); //keeping a margin
+  }
+
+  @Test public void timerShouldTimeCorrectlyWithResets() throws InterruptedException {
+    Utils.Stopwatch timer = new Utils.Stopwatch().start();
+    Thread.sleep(2000);
+    timer.reset();
+    Thread.sleep(2000);
+    long elapsed = timer.elapsed(TimeUnit.SECONDS);
+    Assert.assertTrue(elapsed >= 2 && elapsed <=3); //keeping a margin
   }
 }

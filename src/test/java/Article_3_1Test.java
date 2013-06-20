@@ -1,6 +1,8 @@
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author Nabeel Ali Memon
  */
@@ -52,6 +54,29 @@ public class Article_3_1Test {
       Assert.assertEquals(1, sequence.size());
       sequence.delete("firstName");
       Assert.assertEquals(0, sequence.size());
+    }
+    
+    @Test public void loadModestData() {
+      Article_3_1.ST<String, Integer> sequence = new Article_3_1.SequentialSearch<>();
+      Utils.FileStreamReader fileReader = new Utils.FileStreamReader("leipzig1M.txt");
+      String buffer;
+      Utils.Stopwatch timer = new Utils.Stopwatch();
+      while ((buffer = fileReader.readBuffer()) != null) {
+        String[] words = buffer.split(" ");
+        for (String word : words) {
+          if (word.length() >= 4) {
+            sequence.put(word, word.length());
+          }
+        }
+      }
+      System.out.println("total put operations took: "+timer.elapsed(TimeUnit.SECONDS)+ " sec");
+      System.out.println("size of sequence: "+sequence.size());
+      timer.reset();
+      Integer childWordLength = sequence.get("child");
+      Assert.assertNotNull(childWordLength);
+      Assert.assertTrue(childWordLength > 0);
+      System.out.println("word child's frequency is : " + childWordLength);
+      System.out.println("get(child) took: " + timer.elapsed() + " ms");
     }
   }
 }
