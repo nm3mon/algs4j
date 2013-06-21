@@ -232,9 +232,10 @@ public class Article_3_1 {
       int mid = lo + (hi - lo) / 2;
       Key found = keys[mid];
       int comparison = key.compareTo(found);
+      if (comparison == 0) { return mid; }
       if (comparison < 0) { return rank(key, lo, mid - 1); }
       else if (comparison > 0) { return rank(key, mid + 1, hi); }
-      return mid;
+      return lo;
     }
 
     //bisection search for key (recursive version)
