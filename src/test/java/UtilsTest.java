@@ -40,7 +40,7 @@ public class UtilsTest {
     Assert.assertEquals(710, counter);
   }
 
-  @Test @Ignore //very slow because of huge file size 
+  @Test @Ignore //very slow because of huge file size
   public void shouldReadCompleteMonsterFileInBuffers() {
     final Utils.FileStreamReader reader = new Utils.FileStreamReader("leipzig1M.txt");
     String oldLine = "";
@@ -55,7 +55,8 @@ public class UtilsTest {
     Assert.assertEquals(100000, counter);
   }
 
-  @Test public void shouldLoadFileInStreamAdhoc() throws IOException {
+  @Test @Ignore
+  public void shouldLoadFileInStreamAdhoc() throws IOException {
     final BufferedInputStream stream = new BufferedInputStream(
         this.getClass().getResource("leipzig1M.txt").openStream()
     );
