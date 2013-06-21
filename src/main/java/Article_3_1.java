@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * @author Nabeel Ali Memon
  */
@@ -178,6 +182,138 @@ public class Article_3_1 {
         size--;
         return;
       }
+    }
+  }
+
+  public static class BinarySearchST<Key extends Comparable<? super Key>, Value>
+      extends AbstractST<Key, Value> implements ST<Key, Value> {
+
+    final Key[] keys;
+    final Value[] values;
+    int size;
+
+    public BinarySearchST(int capacity) {
+      this.keys = (Key[]) new Comparable[capacity];
+      this.values = (Value[]) new Object[capacity];
+      this.size = 0;
+    }
+
+    @Override public void put(Key key, Value val) {
+      int rank = rank(key);
+      if (key.equals(keys[rank])) {
+        values[rank] = val;
+        return;
+      }
+      //shift underlying arrays' entries
+      for (int j = size; j >= rank + 1; j--) {
+        keys[j] = keys[j-1];
+        values[j] = values[j-1];
+      }
+      //put the new key and value
+      keys[rank] = key;
+      values[rank] = val;
+      size++;
+    }
+
+    @Override public Value get(Key key) {
+      int rank = rank(key);
+      if (key.equals(keys[rank])) {
+        return values[rank];
+      }
+      return null;
+    }
+
+    @Override public int size() {
+      return size;
+    }
+
+    int rank(Key key, int lo, int hi) {
+      if (lo > hi) return lo;
+      int mid = lo + (hi - lo) / 2;
+      Key found = keys[mid];
+      int comparison = key.compareTo(found);
+      if (comparison < 0) { return rank(key, lo, mid - 1); }
+      else if (comparison > 0) { return rank(key, mid + 1, hi); }
+      return mid;
+    }
+
+    //bisection search for key (recursive version)
+    @Override public int rank(Key key) {
+      return rank(key, 0, size - 1);
+    }
+
+    //bisection search for key (iterative version)
+    /*@Override public int rank(Key key) {
+      if (keys.length == 0) return 0;
+      int lo = 0;
+      int hi = size - 1;
+      while (lo <= hi) {
+        int mid = lo + (hi - lo) / 2;
+        Key found = keys[mid];
+        int comparison = key.compareTo(found);
+        if (comparison == 0) {return mid;}
+        else if (comparison > 0) {lo = mid + 1;}
+        else if (comparison < 0) {hi = mid - 1;}
+      }
+      return lo;
+    }*/
+
+    @Override public Key min() {
+      return keys[0]; //since it's a sorted array
+    }
+
+    @Override public Key max() {
+      return keys[size - 1]; //since it's a sorted array
+    }
+
+    @Override public Key select(int k) {
+      if (k > size) { return null; }
+      return keys[k];
+    }
+
+    @Override public Key ceiling(Key key) {
+      int rank = rank(key);
+      if (rank >= size) { return null; }
+      return select(rank);
+    }
+
+    @Override public Key floor(Key key) {
+      int below = rank(key) - 1;
+      if (below <= size) { return null; }
+      return select(below);
+    }
+
+    @Override public Iterable<Key> keys() {
+      if (size > 0) {
+        return keys(keys[0], keys[size - 1]);
+      }
+      else {
+        return Collections.emptyList();
+      }
+    }
+
+    @Override public boolean contains(Key key) {
+      return select(rank(key)) != null;
+    }
+
+    @Override public void delete(Key key) {
+      super.delete(key);
+    }
+
+    @Override public void deleteMin() {
+      super.deleteMin();
+    }
+
+    @Override public void deleteMax() {
+      super.deleteMax();
+    }
+
+    @Override public Iterable<Key> keys(Key lo, Key hi) {
+      List<Key> boundedKeys = new ArrayList<>();
+      int lowerBound = rank(lo);
+      int upperBound = rank(hi);
+//      for (keys[lowerBound - 1])
+      return super.keys(lo, hi);
     }
   }
 }

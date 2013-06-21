@@ -79,4 +79,34 @@ public class Article_3_1Test {
       System.out.println("get(child) took: " + timer.elapsed() + " ms");
     }
   }
+
+  public static class BinarySearchSTTest {
+    @Test public void shouldBeAbleToPutANewEntry() {
+      Article_3_1.BinarySearchST<String, String> orderedSequence = new Article_3_1.BinarySearchST<>(31);
+      orderedSequence.put("firstName", "Nabeel");
+      Assert.assertEquals(1, orderedSequence.size());
+      orderedSequence.put("secondName", "Ali");
+      Assert.assertEquals(2, orderedSequence.size());
+      orderedSequence.put("thirdName", "Memon");
+      Assert.assertEquals(3, orderedSequence.size());
+    }
+
+    @Test public void shouldBeAbleToGetAnExistingEntry() {
+      Article_3_1.BinarySearchST<String, String> orderedSequence = new Article_3_1.BinarySearchST<>(31);
+      orderedSequence.put("firstName", "Nabeel");
+      orderedSequence.put("secondName", "Ali");
+      orderedSequence.put("thirdName", "Memon");
+      Assert.assertEquals("Nabeel", orderedSequence.get("firstName"));
+      Assert.assertEquals("Ali", orderedSequence.get("secondName"));
+      Assert.assertEquals("Memon", orderedSequence.get("thirdName"));
+    }
+
+    @Test public void shouldBeAbleToUpdateAnExistingEntry() {
+      Article_3_1.BinarySearchST<String, String> orderedSequence = new Article_3_1.BinarySearchST<>(31);
+      orderedSequence.put("firstName", "Nabeel");
+      orderedSequence.put("firstName", "Ummamah");
+      Assert.assertEquals(1, orderedSequence.size());
+      Assert.assertEquals("Ummamah", orderedSequence.get("firstName"));
+    }
+  }
 }
