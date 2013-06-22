@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * @author Nabeel Ali Memon
  */
-public class Article_3_1 {
+public final class Article_3_1 {
   public interface ST<Key extends Comparable<? super Key>, Value> {
     //put key-value pair in table. remove key from table if value is null
     void put(Key key, Value val);

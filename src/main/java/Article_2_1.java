@@ -1,7 +1,7 @@
 /**
  * @author Nabeel Ali Memon
  */
-public class Article_2_1 {
+public final class Article_2_1 {
   public static class InsertionSort {
     static void sort(int[] input) {
       for (int i = 1; i < input.length; i++) {
