@@ -18,6 +18,74 @@ public final class Article_1_1 {
     boolean isEmpty();
     int size();
   }
+  
+  public static class LinkedQueue<Item> implements Queue<Item> {
+    class LinkedNode {
+      LinkedNode next;
+      Item data;
+    }
+    
+    LinkedNode head;
+    LinkedNode tail;
+    int size = 0;
+    int modCount = 0;
+    
+    @Override public void enqueue(Item item) {
+      LinkedNode newTail = new LinkedNode();
+      newTail.data = item;
+      if (isEmpty()) {
+        head = newTail;
+        tail = newTail; 
+      } else { 
+        tail.next = newTail; 
+      }
+      tail = newTail;
+      size++;
+      modCount++;
+    }
+
+    @Override public Item dequeue() {
+      Item value = head.data;
+      head = head.next;
+      size--;
+      modCount++;
+      return value;
+    }
+
+    @Override public boolean isEmpty() {
+      return (size <= 0);
+    }
+
+    @Override public int size() {
+      return size;
+    }
+
+    @Override public Iterator<Item> iterator() {
+      return new Iterator<Item>() {
+        final int version = modCount;
+        int iterationIndex = size;
+        LinkedNode top = head;
+        
+        @Override public boolean hasNext() {
+          return iterationIndex > 0;
+        }
+
+        @Override public Item next() {
+          if (version != modCount) {
+            throw new ConcurrentModificationException();
+          }
+          Item value = top.data;
+          top = top.next;
+          iterationIndex--;
+          return value;
+        }
+
+        @Override public void remove() {
+          throw new UnsupportedOperationException();
+        }
+      };
+    }
+  }
 
   public interface Stack<Item> extends Iterable<Item> {
     void push(Item item);

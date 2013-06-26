@@ -105,4 +105,53 @@ public class Article_1_1Test {
       stackIterator.next();
     }
   }
+  
+  public static class LinkedQueueTest {
+    @Test public void shouldPushAndPopElement() {
+      Article_1_1.Queue<String> linkedQueue = new Article_1_1.LinkedQueue<>();
+      Assert.assertEquals(0, linkedQueue.size());
+      linkedQueue.enqueue("Nabeel");
+      Assert.assertEquals(1, linkedQueue.size());
+      linkedQueue.enqueue("Memon");
+      Assert.assertEquals(2, linkedQueue.size());
+      Assert.assertEquals("Nabeel", linkedQueue.dequeue());
+      Assert.assertEquals(1, linkedQueue.size());
+      Assert.assertEquals("Memon", linkedQueue.dequeue());
+      Assert.assertEquals(0, linkedQueue.size());
+    }
+
+    @Test public void shouldIterateOverStack() {
+      Article_1_1.Queue<String> linkedQueue = new Article_1_1.LinkedQueue<>();
+      linkedQueue.enqueue("Nabeel");
+      linkedQueue.enqueue("Ali");
+      linkedQueue.enqueue("Memon");
+      linkedQueue.enqueue("Software");
+      linkedQueue.enqueue("Engineer");
+      Iterator<String> queueIterator = linkedQueue.iterator();
+      Assert.assertTrue(queueIterator.hasNext());
+      Assert.assertEquals("Nabeel", queueIterator.next());
+      Assert.assertTrue(queueIterator.hasNext());
+      Assert.assertEquals("Ali", queueIterator.next());
+      Assert.assertTrue(queueIterator.hasNext());
+      Assert.assertEquals("Memon", queueIterator.next());
+      Assert.assertTrue(queueIterator.hasNext());
+      Assert.assertEquals("Software", queueIterator.next());
+      Assert.assertTrue(queueIterator.hasNext());
+      Assert.assertEquals("Engineer", queueIterator.next());
+      Assert.assertFalse(queueIterator.hasNext());
+    }
+
+    @Test(expected = ConcurrentModificationException.class)
+    public void shouldThrowCMEIfModifiedDuringIteration() {
+      Article_1_1.Queue<String> linkedQueue = new Article_1_1.LinkedQueue<>();
+      linkedQueue.enqueue("Software");
+      linkedQueue.enqueue("Engineer");
+      Iterator<String> queueIterator = linkedQueue.iterator();
+      Assert.assertTrue(queueIterator.hasNext());
+      Assert.assertEquals("Software", queueIterator.next());
+      linkedQueue.enqueue("Nabeel");
+      Assert.assertTrue(queueIterator.hasNext());
+      queueIterator.next();
+    }
+  }
 }
