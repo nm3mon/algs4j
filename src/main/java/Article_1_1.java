@@ -101,4 +101,71 @@ public final class Article_1_1 {
       };
     }
   }
+  
+  public static class LinkedStack<Item> implements Stack<Item> {
+    class LinkedNode {
+      LinkedNode next;
+      Item data;
+    }
+    
+    LinkedNode head;
+    int size;
+    int modCount;
+
+    public LinkedStack() {
+      size = 0;
+      modCount = 0;
+    }
+
+    @Override public void push(Item item) {
+      LinkedNode newNode = new LinkedNode();
+      newNode.data = item;
+      newNode.next = head;
+      head = newNode;
+      size++;
+      modCount++;
+    }
+
+    @Override public Item pop() {
+      Item value = head.data;
+      head = head.next;
+      size--;
+      modCount++;
+      return value;
+    }
+
+    @Override public boolean isEmpty() {
+      return (size <= 0);
+    }
+
+    @Override public int size() {
+      return size;
+    }
+
+    @Override public Iterator<Item> iterator() {
+      return new Iterator<Item>() {
+        final int version = modCount;
+        LinkedNode top = head;
+        int iterationIndex = size;
+        
+        @Override public boolean hasNext() {
+          return iterationIndex > 0;
+        }
+
+        @Override public Item next() {
+          if (version != modCount) {
+            throw new ConcurrentModificationException();
+          }
+          Item value = top.data;
+          top = top.next;
+          iterationIndex--;
+          return value;
+        }
+
+        @Override public void remove() {
+          throw new UnsupportedOperationException();
+        }
+      };
+    }
+  }
 }

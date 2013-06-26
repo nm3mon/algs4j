@@ -56,4 +56,53 @@ public class Article_1_1Test {
       stackIterator.next();
     }
   }
+  
+  public static class LinkedStackTest {
+    @Test public void shouldPushAndPopElement() {
+      Article_1_1.Stack<String> linkedStack = new Article_1_1.LinkedStack<>();
+      Assert.assertEquals(0, linkedStack.size());
+      linkedStack.push("Nabeel");
+      Assert.assertEquals(1, linkedStack.size());
+      linkedStack.push("Memon");
+      Assert.assertEquals(2, linkedStack.size());
+      Assert.assertEquals("Memon", linkedStack.pop());
+      Assert.assertEquals(1, linkedStack.size());
+      Assert.assertEquals("Nabeel", linkedStack.pop());
+      Assert.assertEquals(0, linkedStack.size());
+    }
+
+    @Test public void shouldIterateOverStack() {
+      Article_1_1.Stack<String> linkedStack = new Article_1_1.LinkedStack<>();
+      linkedStack.push("Engineer");
+      linkedStack.push("Software");
+      linkedStack.push("Memon");
+      linkedStack.push("Ali");
+      linkedStack.push("Nabeel");
+      Iterator<String> stackIterator = linkedStack.iterator();
+      Assert.assertTrue(stackIterator.hasNext());
+      Assert.assertEquals("Nabeel", stackIterator.next());
+      Assert.assertTrue(stackIterator.hasNext());
+      Assert.assertEquals("Ali", stackIterator.next());
+      Assert.assertTrue(stackIterator.hasNext());
+      Assert.assertEquals("Memon", stackIterator.next());
+      Assert.assertTrue(stackIterator.hasNext());
+      Assert.assertEquals("Software", stackIterator.next());
+      Assert.assertTrue(stackIterator.hasNext());
+      Assert.assertEquals("Engineer", stackIterator.next());
+      Assert.assertFalse(stackIterator.hasNext());
+    }
+
+    @Test(expected = ConcurrentModificationException.class)
+    public void shouldThrowCMEIfModifiedDuringIteration() {
+      Article_1_1.Stack<String> linkedStack = new Article_1_1.LinkedStack<>();
+      linkedStack.push("Engineer");
+      linkedStack.push("Software");
+      Iterator<String> stackIterator = linkedStack.iterator();
+      Assert.assertTrue(stackIterator.hasNext());
+      Assert.assertEquals("Software", stackIterator.next());
+      linkedStack.push("Nabeel");
+      Assert.assertTrue(stackIterator.hasNext());
+      stackIterator.next();
+    }
+  }
 }
