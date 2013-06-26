@@ -16,6 +16,55 @@ public final class Article_1_1 {
     boolean isEmpty();
     int size();
   }
+  
+  public static class LinkedBag<Item> implements Bag<Item>  {
+    LinkedNode<Item> head;
+    int size = 0;
+    int modCount = 0;
+
+    @Override public void add(Item item) {
+      LinkedNode<Item> newNode = new LinkedNode<>();
+      newNode.data = item;
+      newNode.next = head;
+      head = newNode;
+      size++;
+      modCount++;
+    }
+
+    @Override public boolean isEmpty() {
+      return size <= 0;
+    }
+
+    @Override public int size() {
+      return size;
+    }
+
+    @Override public Iterator<Item> iterator() {
+      return new Iterator<Item>() {
+        LinkedNode<Item> top = head;
+        int iterationIndex = size;
+        int version = modCount;
+        
+        @Override public boolean hasNext() {
+          return iterationIndex > 0;
+        }
+
+        @Override public Item next() {
+          if (version != modCount) {
+            throw new ConcurrentModificationException();
+          }
+          Item value = top.data;
+          top = top.next;
+          iterationIndex--;
+          return value;
+        }
+
+        @Override public void remove() {
+          throw new UnsupportedOperationException();
+        }
+      };
+    }
+  }
 
   public interface Queue<Item> extends Iterable<Item> {
     void enqueue(Item item);

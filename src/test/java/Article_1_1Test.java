@@ -13,7 +13,8 @@ import java.util.Iterator;
 
 @Suite.SuiteClasses({Article_1_1Test.ResizingArrayStackTest.class, 
                      Article_1_1Test.LinkedStackTest.class,
-                     Article_1_1Test.LinkedQueueTest.class})
+                     Article_1_1Test.LinkedQueueTest.class,
+                     Article_1_1Test.LinkedBagTest.class})
 @RunWith(Suite.class)
 public class Article_1_1Test {
   public static class ResizingArrayStackTest {
@@ -160,6 +161,51 @@ public class Article_1_1Test {
       linkedQueue.enqueue("Nabeel");
       Assert.assertTrue(queueIterator.hasNext());
       queueIterator.next();
+    }
+  }
+  
+  public static class LinkedBagTest {
+    @Test public void shouldPushAndPopElement() {
+      Article_1_1.Bag<String> linkedBag = new Article_1_1.LinkedBag<>();
+      Assert.assertEquals(0, linkedBag.size());
+      linkedBag.add("Nabeel");
+      Assert.assertEquals(1, linkedBag.size());
+      linkedBag.add("Memon");
+      Assert.assertEquals(2, linkedBag.size());
+    }
+
+    @Test public void shouldIterateOverStack() {
+      Article_1_1.Bag<String> linkedBag = new Article_1_1.LinkedBag<>();
+      linkedBag.add("Engineer");
+      linkedBag.add("Software");
+      linkedBag.add("Memon");
+      linkedBag.add("Ali");
+      linkedBag.add("Nabeel");
+      Iterator<String> bagIterator = linkedBag.iterator();
+      Assert.assertTrue(bagIterator.hasNext());
+      Assert.assertEquals("Nabeel", bagIterator.next());
+      Assert.assertTrue(bagIterator.hasNext());
+      Assert.assertEquals("Ali", bagIterator.next());
+      Assert.assertTrue(bagIterator.hasNext());
+      Assert.assertEquals("Memon", bagIterator.next());
+      Assert.assertTrue(bagIterator.hasNext());
+      Assert.assertEquals("Software", bagIterator.next());
+      Assert.assertTrue(bagIterator.hasNext());
+      Assert.assertEquals("Engineer", bagIterator.next());
+      Assert.assertFalse(bagIterator.hasNext());
+    }
+
+    @Test(expected = ConcurrentModificationException.class)
+    public void shouldThrowCMEIfModifiedDuringIteration() {
+      Article_1_1.Bag<String> linkedBag = new Article_1_1.LinkedBag<>();
+      linkedBag.add("Engineer");
+      linkedBag.add("Software");
+      Iterator<String> bagIterator = linkedBag.iterator();
+      Assert.assertTrue(bagIterator.hasNext());
+      Assert.assertEquals("Software", bagIterator.next());
+      linkedBag.add("Nabeel");
+      Assert.assertTrue(bagIterator.hasNext());
+      bagIterator.next();
     }
   }
 }
