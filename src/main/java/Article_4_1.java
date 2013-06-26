@@ -92,4 +92,33 @@ public final class Article_4_1 {
       return adj[v];
     }
   }
+
+  public static class DepthFirstSearch {
+    int count;
+    boolean marked[];
+
+    public DepthFirstSearch(Graph G, int v) {
+      count = 0;
+      marked = new boolean[G.V()];
+      dfs(G, v);
+    }
+
+    void dfs(Graph G, int v) {
+      marked[v] = true;
+      count++;
+      for (int w : G.adj(v)) {
+        if (!marked[w]) {
+          dfs(G, w);
+        }
+      }
+    }
+
+    public boolean isMarked(int v) {
+      return marked[v];
+    }
+
+    public int count() {
+      return count;
+    }
+  }
 }
