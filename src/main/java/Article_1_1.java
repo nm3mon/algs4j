@@ -280,4 +280,72 @@ public final class Article_1_1 {
       };
     }
   }
+  
+  public interface Exercise {
+    public static class E_1_3_1<Item> implements Stack<Item> {
+      Item[] stack;
+      int index;
+      int modCount;
+
+      public E_1_3_1() {
+        this(10); //random default
+      }
+
+      public E_1_3_1(int capacity) {
+        stack = (Item[]) new Object[capacity];
+        index = 0;
+        modCount = 0;
+      }
+
+      @Override public void push(Item item) {
+        if (isFull()) {
+          throw new RuntimeException("Stack is full");
+        }
+        modCount++;
+        stack[index++] = item;
+      }
+
+      boolean isFull() {
+        return index == stack.length;
+      }
+      
+      @Override public Item pop() {
+        modCount++;
+        int currentIndex = --index;
+        Item item = stack[currentIndex];
+        stack[currentIndex] = null; //free up memory
+        return item;
+      }
+
+      @Override public boolean isEmpty() {
+        return index == 0;
+      }
+
+      @Override public int size() {
+        return index;
+      }
+
+      @Override public Iterator<Item> iterator() {
+        return new Iterator<Item>() {
+          int version = modCount;
+          int iterIndex = index;
+          
+          @Override public boolean hasNext() {
+            return iterIndex > 0;
+          }
+
+          @Override public Item next() {
+            if (version != modCount) {
+              throw new ConcurrentModificationException();
+            }
+            return stack[--iterIndex];
+          }
+
+          @Override public void remove() {
+            throw new UnsupportedOperationException();
+          }
+        };
+      }
+    }
+  }
 }

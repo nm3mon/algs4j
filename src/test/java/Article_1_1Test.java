@@ -14,7 +14,8 @@ import java.util.Iterator;
 @Suite.SuiteClasses({Article_1_1Test.ResizingArrayStackTest.class, 
                      Article_1_1Test.LinkedStackTest.class,
                      Article_1_1Test.LinkedQueueTest.class,
-                     Article_1_1Test.LinkedBagTest.class})
+                     Article_1_1Test.LinkedBagTest.class,
+                     Article_1_1Test.E_1_3_1Test.class})
 @RunWith(Suite.class)
 public class Article_1_1Test {
   public static class ResizingArrayStackTest {
@@ -206,6 +207,62 @@ public class Article_1_1Test {
       linkedBag.add("Nabeel");
       Assert.assertTrue(bagIterator.hasNext());
       bagIterator.next();
+    }
+  }
+  
+  public static class E_1_3_1Test {
+    @Test public void shouldPushAndPopElement() {
+      Article_1_1.Exercise.E_1_3_1<String> fixedStack = new Article_1_1.Exercise.E_1_3_1<>(2);
+      Assert.assertEquals(0, fixedStack.size());
+      fixedStack.push("Nabeel");
+      Assert.assertEquals(1, fixedStack.size());
+      fixedStack.push("Memon");
+      Assert.assertEquals(2, fixedStack.size());
+      Assert.assertTrue(fixedStack.isFull());
+      Assert.assertEquals("Memon", fixedStack.pop());
+      Assert.assertEquals(1, fixedStack.size());
+      Assert.assertEquals("Nabeel", fixedStack.pop());
+      Assert.assertEquals(0, fixedStack.size());
+    }
+
+    @Test public void shouldIterateOverStack() {
+      Article_1_1.Exercise.E_1_3_1<String> fixedStack = new Article_1_1.Exercise.E_1_3_1<>(5);
+      fixedStack.push("Engineer");
+      fixedStack.push("Software");
+      fixedStack.push("Memon");
+      fixedStack.push("Ali");
+      fixedStack.push("Nabeel");
+      Iterator<String> stackIterator = fixedStack.iterator();
+      Assert.assertTrue(stackIterator.hasNext());
+      Assert.assertEquals("Nabeel", stackIterator.next());
+      Assert.assertTrue(stackIterator.hasNext());
+      Assert.assertEquals("Ali", stackIterator.next());
+      Assert.assertTrue(stackIterator.hasNext());
+      Assert.assertEquals("Memon", stackIterator.next());
+      Assert.assertTrue(stackIterator.hasNext());
+      Assert.assertEquals("Software", stackIterator.next());
+      Assert.assertTrue(stackIterator.hasNext());
+      Assert.assertEquals("Engineer", stackIterator.next());
+      Assert.assertFalse(stackIterator.hasNext());
+    }
+
+    @Test(expected = ConcurrentModificationException.class)
+    public void shouldThrowCMEIfModifiedDuringIteration() {
+      Article_1_1.Stack<String> fixedStack = new Article_1_1.ResizingArrayStack<>(5);
+      fixedStack.push("Engineer");
+      fixedStack.push("Software");
+      Iterator<String> stackIterator = fixedStack.iterator();
+      Assert.assertTrue(stackIterator.hasNext());
+      Assert.assertEquals("Software", stackIterator.next());
+      fixedStack.push("Nabeel");
+      Assert.assertTrue(stackIterator.hasNext());
+      stackIterator.next();
+    }
+  }
+  
+  public static class E_1_3_4Test {
+    @Test public void checkParentheses() {
+      
     }
   }
 }
