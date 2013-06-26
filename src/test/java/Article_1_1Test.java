@@ -1,5 +1,8 @@
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runner.Runner;
+import org.junit.runners.Suite;
 
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -7,6 +10,11 @@ import java.util.Iterator;
 /**
  * @author Nabeel Ali Memon
  */
+
+@Suite.SuiteClasses({Article_1_1Test.ResizingArrayStackTest.class, 
+                     Article_1_1Test.LinkedStackTest.class,
+                     Article_1_1Test.LinkedQueueTest.class})
+@RunWith(Suite.class)
 public class Article_1_1Test {
   public static class ResizingArrayStackTest {
     @Test public void shouldPushAndPopElement() {

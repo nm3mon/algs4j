@@ -6,6 +6,11 @@ import java.util.Objects;
  * @author Nabeel Ali Memon
  */
 public final class Article_1_1 {
+  static class LinkedNode<Item> {
+    LinkedNode<Item> next;
+    Item data;
+  }
+  
   public interface Bag<Item> extends Iterable<Item> {
     void add(Item item);
     boolean isEmpty();
@@ -20,18 +25,13 @@ public final class Article_1_1 {
   }
   
   public static class LinkedQueue<Item> implements Queue<Item> {
-    class LinkedNode {
-      LinkedNode next;
-      Item data;
-    }
-    
-    LinkedNode head;
-    LinkedNode tail;
+    LinkedNode<Item> head;
+    LinkedNode<Item> tail;
     int size = 0;
     int modCount = 0;
     
     @Override public void enqueue(Item item) {
-      LinkedNode newTail = new LinkedNode();
+      LinkedNode<Item> newTail = new LinkedNode<>();
       newTail.data = item;
       if (isEmpty()) {
         head = newTail;
@@ -64,7 +64,7 @@ public final class Article_1_1 {
       return new Iterator<Item>() {
         final int version = modCount;
         int iterationIndex = size;
-        LinkedNode top = head;
+        LinkedNode<Item> top = head;
         
         @Override public boolean hasNext() {
           return iterationIndex > 0;
@@ -171,12 +171,7 @@ public final class Article_1_1 {
   }
   
   public static class LinkedStack<Item> implements Stack<Item> {
-    class LinkedNode {
-      LinkedNode next;
-      Item data;
-    }
-    
-    LinkedNode head;
+    LinkedNode<Item> head;
     int size;
     int modCount;
 
@@ -186,7 +181,7 @@ public final class Article_1_1 {
     }
 
     @Override public void push(Item item) {
-      LinkedNode newNode = new LinkedNode();
+      LinkedNode<Item> newNode = new LinkedNode<>();
       newNode.data = item;
       newNode.next = head;
       head = newNode;
@@ -213,7 +208,7 @@ public final class Article_1_1 {
     @Override public Iterator<Item> iterator() {
       return new Iterator<Item>() {
         final int version = modCount;
-        LinkedNode top = head;
+        LinkedNode<Item> top = head;
         int iterationIndex = size;
         
         @Override public boolean hasNext() {
