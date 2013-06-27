@@ -35,15 +35,28 @@ public final class Article_1_1 {
     LinkedNode<Item> tail;
     int size;
     int modCount;
+    boolean isCircular;
+
+    public LinkedList() {
+      this(false);
+    }
+
+    public LinkedList(boolean isCircular) {
+      this.isCircular = isCircular;
+    }
 
     void addLast(Item item) {
-      LinkedNode<Item> newNode = new LinkedNode<>(tail, item, null);
+      LinkedNode<Item> newNode = new LinkedNode<>(tail, item, isCircular ? head : null);
       if (tail != null) {
         tail.next = newNode;
       } else {
         head = newNode;
       }
       tail = newNode;
+      if (isCircular) {
+        tail.next = head;
+        head.prev = tail;
+      }
       size++;
       modCount++;
     }
@@ -54,6 +67,10 @@ public final class Article_1_1 {
         currentNode.prev.next = newNode;
       } else {
         head = newNode;
+        if (isCircular) {
+          head.prev = tail;
+          tail.next = head;
+        }
       }
       currentNode.prev = newNode;
       size++;
@@ -65,16 +82,16 @@ public final class Article_1_1 {
     }
 
     @Override public void add(int index, Item item) {
-      validateIndex(index);
-      if (index != 0) {
+      validateAdderIndex(index);
+      if (index == size) {
+        addLast(item);
+      }
+      else {
         LinkedNode<Item> currentNode = head;
         for (int i = 0; i < index; i++) {
           currentNode = currentNode.next;
         }
         addBefore(currentNode, item);
-      }
-      else {
-        addLast(item);
       }
     }
 
@@ -113,7 +130,7 @@ public final class Article_1_1 {
     }
 
     private LinkedNode<Item> internalGet(int index) {
-      validateIndex(index);
+      validateGetterIndex(index);
       LinkedNode<Item> currentNode = head;
       for (int i = 0; i < index; i++) {
         currentNode = currentNode.next;
@@ -121,8 +138,14 @@ public final class Article_1_1 {
       return currentNode;
     }
 
-    void validateIndex(int index) {
+    void validateGetterIndex(int index) {
       if (index < 0 || index >= size) {
+        throw new IllegalArgumentException();
+      }
+    }
+
+    void validateAdderIndex(int index) {
+      if (index < 0 || index > size) {
         throw new IllegalArgumentException();
       }
     }

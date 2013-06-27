@@ -1,4 +1,5 @@
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
@@ -16,7 +17,9 @@ import java.util.Iterator;
                      Article_1_1Test.LinkedQueueTest.class,
                      Article_1_1Test.LinkedBagTest.class,
                      Article_1_1Test.LinkedListTest.class,
-                     Article_1_1Test.E_1_3_1Test.class})
+                     Article_1_1Test.E_1_3_1Test.class,
+                     Article_1_1Test.E_1_3_27Test.class,
+                     Article_1_1Test.E_1_3_30Test.class})
 @RunWith(Suite.class)
 public class Article_1_1Test {
   public static class ResizingArrayStackTest {
@@ -275,6 +278,27 @@ public class Article_1_1Test {
       Assert.assertEquals("Engineer", listIterator.next());
       Assert.assertFalse(listIterator.hasNext());
     }
+
+    @Test public void shouldEncounterHeadNextToTail() {
+      Article_1_1.List<String> linkedList = new Article_1_1.LinkedList<>(true);
+      linkedList.add("Nabeel");
+      linkedList.add("Ali");
+      linkedList.add("Memon");
+      Iterator<String> listIterator = linkedList.iterator();
+      listIterator.next();
+      listIterator.next();
+      listIterator.next();
+      Assert.assertTrue(listIterator.hasNext());
+      Assert.assertEquals("Nabeel", listIterator.next());
+    }
+
+    @Test public void shouldEncounterTailPreviousToHead() {
+      Article_1_1.LinkedList<String> linkedList = new Article_1_1.LinkedList<>(true);
+      linkedList.add("Nabeel");
+      linkedList.add("Ali");
+      linkedList.add("Memon");
+      Assert.assertEquals("Memon", linkedList.head.prev.data);
+    }
   }
 
   public static class E_1_3_1Test {
@@ -324,6 +348,124 @@ public class Article_1_1Test {
       fixedStack.push("Nabeel");
       Assert.assertTrue(stackIterator.hasNext());
       stackIterator.next();
+    }
+  }
+
+  public static class E_1_3_27Test {
+    @Test public void findMax() {
+      Article_1_1.LinkedList<Integer> linkedList = new Article_1_1.LinkedList<>();
+      linkedList.add(13);
+      linkedList.add(1);
+      linkedList.add(131);
+      linkedList.add(3);
+      linkedList.add(45);
+      linkedList.add(6);
+      linkedList.add(9);
+      linkedList.add(113);
+      linkedList.add(167);
+      linkedList.add(257);
+      int number = Integer.MIN_VALUE;
+      //iterative version
+      for (Integer item : linkedList) {
+        if (item > number) {
+          number = item;
+        }
+      }
+      System.out.println("Iterative 1: Max number in this list was "+ number);
+
+      Article_1_1.LinkedNode<Integer> current = linkedList.head;
+      number = Integer.MIN_VALUE; //reset
+      while (current != null) {
+        if (number < current.data ) {
+          number = current.data;
+        }
+        current = current.next;
+      }
+      System.out.println("Iterative 2: Max number in this list was "+ number);
+
+      number = Integer.MIN_VALUE; //reset
+      number = getBiggestNumber(number, linkedList.head);
+      System.out.println("Recursive: Max number in this list was "+ number);
+    }
+
+    int getBiggestNumber(int previousNumber, Article_1_1.LinkedNode<Integer> node) {
+      if (node == null) {
+        return previousNumber;
+      }
+      if (previousNumber < node.data) {
+        previousNumber = node.data;
+      }
+      return getBiggestNumber(previousNumber, node.next);
+    }
+  }
+
+  public static class E_1_3_30Test {
+    Article_1_1.LinkedList<String> linkedList;
+
+    @Before public void setUp() {
+      linkedList = new Article_1_1.LinkedList<>();
+      linkedList.add("Nabeel");
+      linkedList.add("Ali");
+      linkedList.add("Memon");
+      linkedList.add("Software");
+      linkedList.add("Engineer");
+      linkedList.add("On");
+      linkedList.add("JVM");
+    }
+
+    @Test public void iterativeListReversal() {
+      Article_1_1.LinkedNode<String> head = linkedList.head;
+      Article_1_1.LinkedNode<String> current = head;
+      while (head.next != null) {
+        current.prev = head.next;
+        head.next = head.next.next;
+        current.prev.next = current;
+        current = current.prev;
+      }
+      Assert.assertEquals("JVM", current.data); //first node in the result
+      linkedList.head = current;
+      linkedList.tail = head;
+      Iterator<String> listIterator = linkedList.iterator();
+      Assert.assertEquals(7, linkedList.size());
+      Assert.assertEquals("JVM", listIterator.next());
+      Assert.assertEquals("On", listIterator.next());
+      Assert.assertEquals("Engineer", listIterator.next());
+      Assert.assertEquals("Software", listIterator.next());
+      Assert.assertEquals("Memon", listIterator.next());
+      Assert.assertEquals("Ali", listIterator.next());
+      Assert.assertEquals("Nabeel", listIterator.next());
+      Assert.assertFalse(listIterator.hasNext());
+    }
+
+    @Test public void RecursiveListReversal() {
+      Article_1_1.LinkedNode<String> head = linkedList.head;
+      Article_1_1.LinkedNode<String> current = head;
+      Article_1_1.LinkedNode<String> firstVariable = reverse(head, current);
+      Assert.assertEquals("JVM", firstVariable.data); //first node in the result
+      linkedList.head = firstVariable;
+      linkedList.tail = head;
+      Iterator<String> listIterator = linkedList.iterator();
+      Assert.assertEquals(7, linkedList.size());
+      Assert.assertEquals("JVM", listIterator.next());
+      Assert.assertEquals("On", listIterator.next());
+      Assert.assertEquals("Engineer", listIterator.next());
+      Assert.assertEquals("Software", listIterator.next());
+      Assert.assertEquals("Memon", listIterator.next());
+      Assert.assertEquals("Ali", listIterator.next());
+      Assert.assertEquals("Nabeel", listIterator.next());
+      Assert.assertFalse(listIterator.hasNext());
+    }
+
+    <Item> Article_1_1.LinkedNode<Item> reverse(Article_1_1.LinkedNode<Item> head,
+                                                Article_1_1.LinkedNode<Item> current) {
+      if (head.next == null) {
+        return current;
+      }
+      current.prev = head.next;
+      head.next = head.next.next;
+      current.prev.next = current;
+      current = current.prev;
+      return reverse(head, current);
     }
   }
 }
