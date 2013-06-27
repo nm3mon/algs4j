@@ -15,6 +15,7 @@ import java.util.Iterator;
                      Article_1_1Test.LinkedStackTest.class,
                      Article_1_1Test.LinkedQueueTest.class,
                      Article_1_1Test.LinkedBagTest.class,
+                     Article_1_1Test.LinkedListTest.class,
                      Article_1_1Test.E_1_3_1Test.class})
 @RunWith(Suite.class)
 public class Article_1_1Test {
@@ -209,7 +210,73 @@ public class Article_1_1Test {
       bagIterator.next();
     }
   }
-  
+
+  public static class LinkedListTest {
+    @Test public void shouldAddUpNodes() {
+      Article_1_1.List<String> linkedList = new Article_1_1.LinkedList<>();
+      Assert.assertEquals(0, linkedList.size());
+      linkedList.add("Nabeel");
+      Assert.assertEquals(1, linkedList.size());
+      linkedList.add("Memon");
+      Assert.assertEquals(2, linkedList.size());
+    }
+
+    @Test public void shouldReturnItemAtGivenIndex() {
+      Article_1_1.List<String> linkedList = new Article_1_1.LinkedList<>();
+      linkedList.add("Nabeel");
+      linkedList.add("Memon");
+      Assert.assertEquals("Nabeel", linkedList.get(0));
+      Assert.assertEquals("Memon", linkedList.get(1));
+    }
+
+    @Test public void shouldRemoveItemAtGivenIndex() {
+      Article_1_1.List<String> linkedList = new Article_1_1.LinkedList<>();
+      linkedList.add("Nabeel");
+      linkedList.add("Ali");
+      linkedList.add("Memon");
+      Assert.assertEquals(3, linkedList.size());
+      Assert.assertEquals("Ali", linkedList.remove(1));
+      Assert.assertEquals(2, linkedList.size());
+      Assert.assertEquals("Memon", linkedList.remove(1));
+      Assert.assertEquals(1, linkedList.size());
+      Assert.assertEquals("Nabeel", linkedList.remove(0));
+      Assert.assertEquals(0, linkedList.size());
+    }
+
+    @Test public void shouldRemoveAllEqualItems() {
+      Article_1_1.List<String> linkedList = new Article_1_1.LinkedList<>();
+      linkedList.add("Software");
+      linkedList.add("Java");
+      linkedList.add("Software");
+      Assert.assertEquals(3, linkedList.size());
+      linkedList.remove("Software");
+      Assert.assertEquals(1, linkedList.size());
+      linkedList.remove("Java");
+      Assert.assertEquals(0, linkedList.size());
+    }
+
+    @Test public void shouldIteratorInInsertionOrder() {
+      Article_1_1.List<String> linkedList = new Article_1_1.LinkedList<>();
+      linkedList.add("Nabeel");
+      linkedList.add("Ali");
+      linkedList.add("Memon");
+      linkedList.add("Software");
+      linkedList.add("Engineer");
+      Iterator<String> listIterator = linkedList.iterator();
+      Assert.assertTrue(listIterator.hasNext());
+      Assert.assertEquals("Nabeel", listIterator.next());
+      Assert.assertTrue(listIterator.hasNext());
+      Assert.assertEquals("Ali", listIterator.next());
+      Assert.assertTrue(listIterator.hasNext());
+      Assert.assertEquals("Memon", listIterator.next());
+      Assert.assertTrue(listIterator.hasNext());
+      Assert.assertEquals("Software", listIterator.next());
+      Assert.assertTrue(listIterator.hasNext());
+      Assert.assertEquals("Engineer", listIterator.next());
+      Assert.assertFalse(listIterator.hasNext());
+    }
+  }
+
   public static class E_1_3_1Test {
     @Test public void shouldPushAndPopElement() {
       Article_1_1.Exercise.E_1_3_1<String> fixedStack = new Article_1_1.Exercise.E_1_3_1<>(2);
@@ -257,12 +324,6 @@ public class Article_1_1Test {
       fixedStack.push("Nabeel");
       Assert.assertTrue(stackIterator.hasNext());
       stackIterator.next();
-    }
-  }
-  
-  public static class E_1_3_4Test {
-    @Test public void checkParentheses() {
-      
     }
   }
 }

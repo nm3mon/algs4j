@@ -8,9 +8,158 @@ import java.util.Objects;
 public final class Article_1_1 {
   static class LinkedNode<Item> {
     LinkedNode<Item> next;
+    LinkedNode<Item> prev;
     Item data;
+
+    LinkedNode() {}
+
+    LinkedNode(LinkedNode<Item> prev, Item data, LinkedNode<Item> next) {
+      this.prev = prev;
+      this.data = data;
+      this.next = next;
+    }
   }
-  
+
+  public interface List<Item> extends Iterable<Item> {
+    void add(Item item);
+    void add(int index, Item item);
+    Item remove(int index);
+    void remove(Item item);
+    Item get(int index);
+    boolean isEmpty();
+    int size();
+  }
+
+  public static class LinkedList<Item> implements List<Item> {
+    LinkedNode<Item> head;
+    LinkedNode<Item> tail;
+    int size;
+    int modCount;
+
+    void addLast(Item item) {
+      LinkedNode<Item> newNode = new LinkedNode<>(tail, item, null);
+      if (tail != null) {
+        tail.next = newNode;
+      } else {
+        head = newNode;
+      }
+      tail = newNode;
+      size++;
+      modCount++;
+    }
+
+    void addBefore(LinkedNode<Item> currentNode, Item item) {
+      LinkedNode<Item> newNode = new LinkedNode<>(currentNode.prev, item, currentNode);
+      if (currentNode.prev != null) {
+        currentNode.prev.next = newNode;
+      } else {
+        head = newNode;
+      }
+      currentNode.prev = newNode;
+      size++;
+      modCount++;
+    }
+
+    @Override public void add(Item item) {
+      addLast(item);
+    }
+
+    @Override public void add(int index, Item item) {
+      validateIndex(index);
+      if (index != 0) {
+        LinkedNode<Item> currentNode = head;
+        for (int i = 0; i < index; i++) {
+          currentNode = currentNode.next;
+        }
+        addBefore(currentNode, item);
+      }
+      else {
+        addLast(item);
+      }
+    }
+
+    @Override public void remove(Item item) {
+      for (LinkedNode<Item> currentNode = head; currentNode != null;)
+      while (currentNode != null) {
+        LinkedNode<Item> temp = currentNode.next;
+        if (currentNode.data.equals(item)) {
+          internalRemove(currentNode);
+        }
+        currentNode = temp;
+      }
+    }
+
+    @Override public Item remove(int index) {
+      LinkedNode<Item> currentNode = internalGet(index);
+      return internalRemove(currentNode);
+    }
+
+    Item internalRemove(LinkedNode<Item> currentNode) {
+      if (currentNode.prev != null) {
+        currentNode.prev.next = currentNode.next;
+      }
+      if (currentNode.next != null) {
+        currentNode.next.prev = currentNode.prev;
+      }
+      Item data = currentNode.data;
+      currentNode = null;
+      size--;
+      modCount--;
+      return data;
+    }
+
+    @Override public Item get(int index) {
+      return internalGet(index).data;
+    }
+
+    private LinkedNode<Item> internalGet(int index) {
+      validateIndex(index);
+      LinkedNode<Item> currentNode = head;
+      for (int i = 0; i < index; i++) {
+        currentNode = currentNode.next;
+      }
+      return currentNode;
+    }
+
+    void validateIndex(int index) {
+      if (index < 0 || index >= size) {
+        throw new IllegalArgumentException();
+      }
+    }
+
+    @Override public boolean isEmpty() {
+      return size == 0;
+    }
+
+    @Override public int size() {
+      return size;
+    }
+
+    @Override public Iterator<Item> iterator() {
+      return new Iterator<Item>() {
+        int version = modCount;
+        LinkedNode<Item> cursor = head;
+
+        @Override public boolean hasNext() {
+          return (cursor != null);
+        }
+
+        @Override public Item next() {
+          if (version != modCount) {
+            throw new ConcurrentModificationException();
+          }
+          Item data = cursor.data;
+          cursor = cursor.next;
+          return data;
+        }
+
+        @Override public void remove() {
+          throw new UnsupportedOperationException();
+        }
+      };
+    }
+  }
+
   public interface Bag<Item> extends Iterable<Item> {
     void add(Item item);
     boolean isEmpty();
